@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "main": "src/index.js",
+  "main": "src/index.jsx",
   "dependencies": {
+    "@ant-design/icons": "4.7.0",
     "antd": "4.19.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-icons": "4.3.1",
-    "sass": "1.49.9"
+    "react-html-parser": "2.0.2",
+    "react-icons": "4.3.1"
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
