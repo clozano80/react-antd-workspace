@@ -1,30 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Menu, Layout, Drawer, Button, Icon } from "antd";
-import { WiMoonAltFirstQuarter } from "react-icons/wi";
-import {
-  DatabaseOutlined,
-  DownOutlined,
-  PlusSquareOutlined
-} from "@ant-design/icons";
+import { BsMenuButtonWide } from "react-icons/bs";
+import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
+import { DatabaseOutlined } from "@ant-design/icons";
 import ToggleTheme, { getTheme, setTheme } from "../toggletheme/ToggleTheme";
-import "./layout.css";
+import "./displaylayout.css";
+import Form from "../../apps/form/Form";
 
 const { TabPane } = Tabs;
 const { Header, Sider, Content, Footer } = Layout;
 
 const MainContent = () => (
   <>
-    <h1>Open "apps" in tabs:</h1>
+    <h1>Open tabs:</h1>
     <p>Content</p>
-    <p>Content 2</p>
+    <Form />
   </>
 );
-
+//const addText = (lines) => Array.from({length: lines}, (_, i) => (`linea ${i}`));
+const addText = (lines) =>
+  [...Array(lines).keys()].map((i) => (
+    <div>
+      linea {i}
+      <br />
+    </div>
+  ));
 const AppExample = () => (
   <>
     <h1>AppExample</h1>
-    <p>Content</p>
-    <p>Content 2</p>
+    {addText(50)}
   </>
 );
 //fetch auth protected
@@ -62,7 +66,7 @@ export default function DisplayLayout() {
     const { panes } = state;
     const activeKey = `key_${Date.now()}`;
     panes.push({
-      title: "New Tab",
+      title: `Name ${Date.now()}`,
       content: "New Tab Pane",
       key: activeKey,
       closable: true
@@ -103,7 +107,7 @@ export default function DisplayLayout() {
         Dark/light Theme <ToggleTheme />
       </div>
       <Menu>
-        <Menu.Item>
+        <Menu.Item key="1">
           <a target="_blank" rel="noopener noreferrer" href="/" onClick={add}>
             + Add Tab
           </a>
@@ -113,25 +117,42 @@ export default function DisplayLayout() {
   );
 
   const operations = (
-    <a
-      target="_blank"
-      rel="noopener noreferrer"
-      href="/"
-      onClick={(e) => {
-        e.preventDefault();
-        setVisible(!visible);
-      }}
-    >
-      <PlusSquareOutlined />
-    </a>
+    <div>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+          setVisible(!visible);
+        }}
+      >
+        <VscSplitVertical />
+      </a>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+          setVisible(!visible);
+        }}
+      >
+        <VscSplitHorizontal />
+      </a>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+          setVisible(!visible);
+        }}
+      >
+        <BsMenuButtonWide />
+      </a>
+    </div>
   );
-  // const operations = (
-  //   <Dropdown overlay={menu} arrow={{ pointAtCenter: true }}>
-  //     <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-  //       <PlusSquareOutlined />
-  //     </a>
-  //   </Dropdown>
-  // );
 
   const onClose = () => {
     setVisible(false);
@@ -158,7 +179,7 @@ export default function DisplayLayout() {
         >
           <Tabs
             tabBarExtraContent={operations}
-            // hideAdd
+            hideAdd
             onChange={onChange}
             activeKey={state.activeKey}
             type="editable-card"
@@ -183,10 +204,12 @@ export default function DisplayLayout() {
             ;
           </Tabs>
         </Content>
-        <Footer style={{ textAlign: "center", height: "20px" }}>Footer.</Footer>
+        <Footer>
+          <span>Footer</span>
+        </Footer>
       </Layout>
       <Drawer
-        title="Drawer with extra actions"
+        title="Options"
         placement="right"
         width="30vw"
         onClose={onClose}
@@ -194,22 +217,6 @@ export default function DisplayLayout() {
       >
         {menu}
       </Drawer>
-      {/* <Sider
-        width={256}
-        style={{ minHeight: "100vh" }}
-        collapsed={siderCollapsed}
-        collapsedWidth="0"
-        breakpoint="lg"
-        trigger={null}
-      >
-        <div
-          style={{
-            height: "32px",
-            background: "rgba(255,255,255,.2)",
-            margin: "16px"
-          }}
-        />
-      </Sider> */}
     </Layout>
   );
 }
