@@ -11,8 +11,12 @@
   height: 30px;
 }
 
+.ant-tabs-content-holder {
+  padding: 1rem;
+}
+
 .ant-tabs-extra-content {
-  margin-right: 100px;
+  padding: 0 1rem;
 }
 
 .ant-dropdown-menu {

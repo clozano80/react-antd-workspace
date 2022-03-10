@@ -32,10 +32,10 @@ const systemTheme = () =>
     ? "dark"
     : "light";
 
-const getTheme = () =>
+export const getTheme = () =>
   (localStorage.getItem("theme") as Theme) || systemTheme();
 
-const setTheme = (t: Theme) => {
+export const setTheme = (t: Theme) => {
   localStorage.setItem("theme", t);
   getStylesheetLink().href = stylesheets[t];
 };

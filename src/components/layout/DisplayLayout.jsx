@@ -1,26 +1,45 @@
-import React, { useState } from "react";
-import { Tabs, Menu, Layout, Dropdown, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Tabs, Menu, Layout, Drawer, Button, Icon } from "antd";
 import { WiMoonAltFirstQuarter } from "react-icons/wi";
-import { DatabaseOutlined, DownOutlined } from "@ant-design/icons";
-import ToggleTheme from "../toggletheme/ToggleTheme";
+import {
+  DatabaseOutlined,
+  DownOutlined,
+  PlusSquareOutlined
+} from "@ant-design/icons";
+import ToggleTheme, { getTheme, setTheme } from "../toggletheme/ToggleTheme";
 import "./layout.css";
 
 const { TabPane } = Tabs;
-const { Header, Content, Footer } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
+const MainContent = () => (
+  <>
+    <h1>Open "apps" in tabs:</h1>
+    <p>Content</p>
+    <p>Content 2</p>
+  </>
+);
+
+const AppExample = () => (
+  <>
+    <h1>AppExample</h1>
+    <p>Content</p>
+    <p>Content 2</p>
+  </>
+);
 //fetch auth protected
 const panes = [
   {
     title: "LOGO",
     icon: <DatabaseOutlined />,
-    content: "Content of Tab 1",
+    content: <MainContent />,
     key: "1",
     closable: false
   },
   {
     title: "Tab 2",
     icon: "",
-    content: "Content of Tab 2",
+    content: <AppExample />,
     key: "2",
     closable: true
   }
@@ -31,6 +50,8 @@ export default function DisplayLayout() {
     activeKey: panes[0].key,
     panes
   });
+  const [visible, setVisible] = useState(false);
+  useEffect(() => setTheme(getTheme()), []);
 
   const onChange = (activeKey) => {
     setState({ panes, activeKey });
@@ -76,91 +97,119 @@ export default function DisplayLayout() {
     setState({ activeKey, panes });
   };
 
-  const removeActive = (e) => {
-    e.preventDefault();
-    let { activeKey } = state;
-    const newPanes = state.panes.filter((pane) => pane.key !== activeKey);
-    setState({ activeKey, newPanes });
-  };
-
   const menu = (
-    <Menu>
-      <Menu.Item>
+    <>
+      <div>
         Dark/light Theme <ToggleTheme />
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="/" onClick={add}>
-          + Add Tab
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="/"
-          onClick={removeActive}
-        >
-          - Remove Tab
-        </a>
-      </Menu.Item>
-    </Menu>
+      </div>
+      <Menu>
+        <Menu.Item>
+          <a target="_blank" rel="noopener noreferrer" href="/" onClick={add}>
+            + Add Tab
+          </a>
+        </Menu.Item>
+      </Menu>
+    </>
   );
 
-  // const operations = <Button>Extra Action</Button>;
   const operations = (
-    <Dropdown overlay={menu} arrow={{ pointAtCenter: true }}>
-      <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-        bottomLeft
-      </a>
-    </Dropdown>
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href="/"
+      onClick={(e) => {
+        e.preventDefault();
+        setVisible(!visible);
+      }}
+    >
+      <PlusSquareOutlined />
+    </a>
   );
+  // const operations = (
+  //   <Dropdown overlay={menu} arrow={{ pointAtCenter: true }}>
+  //     <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+  //       <PlusSquareOutlined />
+  //     </a>
+  //   </Dropdown>
+  // );
+
+  const onClose = () => {
+    setVisible(false);
+  };
 
   return (
     <Layout>
-      <Header
-        style={{
-          position: "fixed",
-          zIndex: 1,
-          width: "100%",
-          height: "30px"
-        }}
-      ></Header>
-      <Content
-        className="site-layout"
-        style={{
-          padding: "0",
-          marginTop: 0,
-          height: "calc(100vh - 60px)"
-        }}
-      >
-        <Tabs
-          tabBarExtraContent={operations}
-          // hideAdd
-          onChange={onChange}
-          activeKey={state.activeKey}
-          type="editable-card"
-          onEdit={onEdit}
+      <Layout>
+        <Header
+          style={{
+            position: "fixed",
+            zIndex: 1,
+            width: "100%",
+            height: "30px"
+          }}
+        ></Header>
+        <Content
+          className="site-layout"
+          style={{
+            padding: "0",
+            marginTop: 0,
+            height: "calc(100vh - 60px)"
+          }}
         >
-          {state.panes.map((pane) => {
-            return (
-              <TabPane
-                tab={
-                  <span>
-                    {pane.icon}
-                    {pane.title}
-                  </span>
-                }
-                key={pane.key}
-                closable={pane.closable}
-              >
-                {pane.content}
-              </TabPane>
-            );
-          })}
-          ;
-        </Tabs>
-      </Content>
-      <Footer style={{ textAlign: "center", height: "20px" }}>Footer.</Footer>
+          <Tabs
+            tabBarExtraContent={operations}
+            // hideAdd
+            onChange={onChange}
+            activeKey={state.activeKey}
+            type="editable-card"
+            onEdit={onEdit}
+          >
+            {state.panes.map((pane) => {
+              return (
+                <TabPane
+                  tab={
+                    <span>
+                      {pane.icon}
+                      {pane.title}
+                    </span>
+                  }
+                  key={pane.key}
+                  closable={pane.closable}
+                >
+                  {pane.content}
+                </TabPane>
+              );
+            })}
+            ;
+          </Tabs>
+        </Content>
+        <Footer style={{ textAlign: "center", height: "20px" }}>Footer.</Footer>
+      </Layout>
+      <Drawer
+        title="Drawer with extra actions"
+        placement="right"
+        width="30vw"
+        onClose={onClose}
+        visible={visible}
+      >
+        {menu}
+      </Drawer>
+      {/* <Sider
+        width={256}
+        style={{ minHeight: "100vh" }}
+        collapsed={siderCollapsed}
+        collapsedWidth="0"
+        breakpoint="lg"
+        trigger={null}
+      >
+        <div
+          style={{
+            height: "32px",
+            background: "rgba(255,255,255,.2)",
+            margin: "16px"
+          }}
+        />
+      </Sider> */}
     </Layout>
   );
 }
