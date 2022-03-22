@@ -1,6 +1,6 @@
-import React from "react";
 import Switch from "antd/lib/switch";
-import { TRUE } from "sass";
+import { useEffect, useState } from "react";
+//import { TRUE } from "sass";
 
 type Theme = "light" | "dark";
 
@@ -42,10 +42,10 @@ export const setTheme = (t: Theme) => {
 
 const ToggleTheme: React.FC = () => {
   // Set the default theme when the component is mounted
-  const [checked, setChecked] = React.useState<boolean>(
+  const [checked, setChecked] = useState<boolean>(
     getTheme() === "dark" ? true : false
   );
-  React.useEffect(() => setTheme(getTheme()), []);
+  useEffect(() => setTheme(getTheme()), []);
 
   const toggleTheme = () => {
     setTheme(getTheme() === "dark" ? "light" : "dark");

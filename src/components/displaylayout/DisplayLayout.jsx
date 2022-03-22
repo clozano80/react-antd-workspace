@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Menu, Layout, Drawer, Button, Icon } from "antd";
 import { BsMenuButtonWide } from "react-icons/bs";
+import { RiMore2Fill } from "react-icons/ri";
 import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
 import { DatabaseOutlined } from "@ant-design/icons";
 import ToggleTheme, { getTheme, setTheme } from "../toggletheme/ToggleTheme";
@@ -17,6 +18,26 @@ const MainContent = () => (
     <Form />
   </>
 );
+
+const Options = () => (
+  <>
+    <RiMore2Fill
+      key="0"
+      className="ant-tabs-tab-remove"
+      style={{
+        marginLeft: "0.8rem",
+        marginRight: "-0.5rem",
+        marginTop: "0.2rem"
+      }}
+      onClick={(e) => {
+        e.preventDefault();
+        //e.stopPropagation();
+        console.log("click more tab");
+      }}
+    />
+  </>
+);
+
 //const addText = (lines) => Array.from({length: lines}, (_, i) => (`linea ${i}`));
 const addText = (lines) =>
   [...Array(lines).keys()].map((i) => (
@@ -37,6 +58,7 @@ const panes = [
     title: "LOGO",
     icon: <DatabaseOutlined />,
     content: <MainContent />,
+    options: null,
     key: "1",
     closable: false
   },
@@ -44,6 +66,7 @@ const panes = [
     title: "Tab 2",
     icon: "",
     content: <AppExample />,
+    options: <Options />,
     key: "2",
     closable: true
   }
@@ -61,17 +84,18 @@ export default function DisplayLayout() {
     setState({ panes, activeKey });
   };
 
-  const add = (e) => {
-    e ? e.preventDefault() : null;
+  const add = () => {
+    //e ? e.preventDefault() : null;
     const { panes } = state;
-    const activeKey = `key_${Date.now()}`;
+    const addKey = `key_${Date.now()}`;
     panes.push({
       title: `Name ${Date.now()}`,
       content: "New Tab Pane",
-      key: activeKey,
+      options: <Options />,
+      key: addKey,
       closable: true
     });
-    setState({ activeKey, panes });
+    setState({ activeKey: addKey, panes });
   };
 
   const onEdit = (targetKey, action) => {
@@ -108,7 +132,15 @@ export default function DisplayLayout() {
       </div>
       <Menu>
         <Menu.Item key="1">
-          <a target="_blank" rel="noopener noreferrer" href="/" onClick={add}>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              add();
+            }}
+          >
             + Add Tab
           </a>
         </Menu.Item>
@@ -192,6 +224,7 @@ export default function DisplayLayout() {
                     <span>
                       {pane.icon}
                       {pane.title}
+                      {pane.options}
                     </span>
                   }
                   key={pane.key}
