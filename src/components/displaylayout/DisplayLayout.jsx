@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Menu, Layout, Drawer, Button, Icon } from "antd";
+import { Tabs, Menu, Layout, Drawer, Dropdown } from "antd";
 import { BsMenuButtonWide } from "react-icons/bs";
-import { RiMore2Fill } from "react-icons/ri";
+import { RiFullscreenFill, RiMore2Fill } from "react-icons/ri";
+import { MdOutlineOpenInNew } from "react-icons/md";
 import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
 import { DatabaseOutlined } from "@ant-design/icons";
 import ToggleTheme, { getTheme, setTheme } from "../toggletheme/ToggleTheme";
@@ -9,7 +10,7 @@ import "./displaylayout.css";
 import Form from "../../apps/form/Form";
 
 const { TabPane } = Tabs;
-const { Header, Sider, Content, Footer } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const MainContent = () => (
   <>
@@ -19,29 +20,85 @@ const MainContent = () => (
   </>
 );
 
+const menuTabDropdown = (
+  <Menu>
+    <Menu.Item key="0">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <VscSplitVertical /> División vertical
+      </a>
+    </Menu.Item>
+    <Menu.Item key="1">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <VscSplitHorizontal /> División horizontal
+      </a>
+    </Menu.Item>
+    <Menu.Item key="2">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <RiFullscreenFill /> Pantalla completa
+      </a>
+    </Menu.Item>
+    <Menu.Item key="3">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <MdOutlineOpenInNew /> Abrir en nueva ventana
+      </a>
+    </Menu.Item>
+  </Menu>
+);
 const Options = () => (
-  <>
-    <RiMore2Fill
+  <Dropdown overlay={menuTabDropdown}>
+    <a
       key="0"
-      className="ant-tabs-tab-remove"
-      style={{
-        marginLeft: "0.8rem",
-        marginRight: "-0.5rem",
-        marginTop: "0.2rem"
-      }}
+      target="_blank"
+      rel="noopener noreferrer"
+      href="/"
       onClick={(e) => {
         e.preventDefault();
-        //e.stopPropagation();
-        console.log("click more tab");
       }}
-    />
-  </>
+    >
+      <RiMore2Fill
+        className="ant-tabs-tab-remove"
+        style={{
+          marginLeft: "0.8rem",
+          marginRight: "-0.5rem",
+          marginTop: "0.2rem"
+        }}
+      />
+    </a>
+  </Dropdown>
 );
 
 //const addText = (lines) => Array.from({length: lines}, (_, i) => (`linea ${i}`));
 const addText = (lines) =>
   [...Array(lines).keys()].map((i) => (
-    <div>
+    <div key={i}>
       linea {i}
       <br />
     </div>
@@ -53,7 +110,7 @@ const AppExample = () => (
   </>
 );
 //fetch auth protected
-const panes = [
+let panes = [
   {
     title: "LOGO",
     icon: <DatabaseOutlined />,
@@ -81,7 +138,8 @@ export default function DisplayLayout() {
   useEffect(() => setTheme(getTheme()), []);
 
   const onChange = (activeKey) => {
-    setState({ panes, activeKey });
+    const { panes } = state;
+    setState({ activeKey: activeKey, panes });
   };
 
   const add = () => {
@@ -108,23 +166,23 @@ export default function DisplayLayout() {
 
   const remove = (targetKey) => {
     let { activeKey } = state;
+    const { panes } = state;
     let lastIndex;
-    state.panes.forEach((pane, i) => {
+    panes.forEach((pane, i) => {
       if (pane.key === targetKey) {
         lastIndex = i - 1;
       }
     });
-    const panes = state.panes.filter((pane) => pane.key !== targetKey);
+    const newPanes = panes.filter((pane) => pane.key !== targetKey);
     if (panes.length && activeKey === targetKey) {
       if (lastIndex >= 0) {
-        activeKey = panes[lastIndex].key;
+        activeKey = newPanes[lastIndex].key;
       } else {
-        activeKey = panes[0].key;
+        activeKey = newPanes[0].key;
       }
     }
-    setState({ activeKey, panes });
+    setState({ activeKey: activeKey, panes: newPanes });
   };
-
   const menu = (
     <>
       <div>
@@ -150,28 +208,6 @@ export default function DisplayLayout() {
 
   const operations = (
     <div>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-          setVisible(!visible);
-        }}
-      >
-        <VscSplitVertical />
-      </a>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-          setVisible(!visible);
-        }}
-      >
-        <VscSplitHorizontal />
-      </a>
       <a
         target="_blank"
         rel="noopener noreferrer"
