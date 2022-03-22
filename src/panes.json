@@ -1,0 +1,18 @@
+[
+  {
+    "title": "LOGO",
+    "icon": "DatabaseOutlined",
+    "content": "Main",
+    "options": null,
+    "key": "1",
+    "closable": false
+  },
+  {
+    "title": "Tab 2",
+    "icon": "",
+    "content": "AppExample",
+    "options": "DropdownMenuTab",
+    "key": "2",
+    "closable": true
+  }
+]

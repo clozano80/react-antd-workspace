@@ -1,133 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Menu, Layout, Drawer, Dropdown } from "antd";
-import { BsMenuButtonWide } from "react-icons/bs";
-import { RiFullscreenFill, RiMore2Fill } from "react-icons/ri";
-import { MdOutlineOpenInNew } from "react-icons/md";
-import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
-import { DatabaseOutlined } from "@ant-design/icons";
 import ToggleTheme, { getTheme, setTheme } from "../toggletheme/ToggleTheme";
 import "./displaylayout.css";
-import Form from "../../apps/form/Form";
-
+//Apps
+import Main from "../../apps/main/Main";
+import AppExample from "../../apps/appexample/AppExample";
+//Layout
+import DropdownMenuTab from "../dropdownmenutab/DropdownMenuTab";
+import { Tabs, Menu, Layout, Drawer } from "antd";
+import { BsMenuButtonWide } from "react-icons/bs";
+import { DatabaseOutlined } from "@ant-design/icons";
 const { TabPane } = Tabs;
 const { Header, Content, Footer } = Layout;
 
-const MainContent = () => (
-  <>
-    <h1>Open tabs:</h1>
-    <p>Content</p>
-    <Form />
-  </>
-);
+let panes = require("../../panes.json");
 
-const menuTabDropdown = (
-  <Menu>
-    <Menu.Item key="0">
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <VscSplitVertical /> División vertical
-      </a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <VscSplitHorizontal /> División horizontal
-      </a>
-    </Menu.Item>
-    <Menu.Item key="2">
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <RiFullscreenFill /> Pantalla completa
-      </a>
-    </Menu.Item>
-    <Menu.Item key="3">
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="/"
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <MdOutlineOpenInNew /> Abrir en nueva ventana
-      </a>
-    </Menu.Item>
-  </Menu>
-);
-const Options = () => (
-  <Dropdown overlay={menuTabDropdown}>
-    <a
-      key="0"
-      target="_blank"
-      rel="noopener noreferrer"
-      href="/"
-      onClick={(e) => {
-        e.preventDefault();
-      }}
-    >
-      <RiMore2Fill
-        className="ant-tabs-tab-remove"
-        style={{
-          marginLeft: "0.8rem",
-          marginRight: "-0.5rem",
-          marginTop: "0.2rem"
-        }}
-      />
-    </a>
-  </Dropdown>
-);
-
-//const addText = (lines) => Array.from({length: lines}, (_, i) => (`linea ${i}`));
-const addText = (lines) =>
-  [...Array(lines).keys()].map((i) => (
-    <div key={i}>
-      linea {i}
-      <br />
-    </div>
-  ));
-const AppExample = () => (
-  <>
-    <h1>AppExample</h1>
-    {addText(50)}
-  </>
-);
-//fetch auth protected
-let panes = [
-  {
-    title: "LOGO",
-    icon: <DatabaseOutlined />,
-    content: <MainContent />,
-    options: null,
-    key: "1",
-    closable: false
-  },
-  {
-    title: "Tab 2",
-    icon: "",
-    content: <AppExample />,
-    options: <Options />,
-    key: "2",
-    closable: true
-  }
-];
+const Components = {
+  Main: <Main />,
+  AppExample: <AppExample />,
+  DatabaseOutlined: <DatabaseOutlined />,
+  DropdownMenuTab: <DropdownMenuTab />
+};
 
 export default function DisplayLayout() {
   const [state, setState] = useState({
@@ -149,7 +41,7 @@ export default function DisplayLayout() {
     panes.push({
       title: `Name ${Date.now()}`,
       content: "New Tab Pane",
-      options: <Options />,
+      options: <DropdownMenuTab />,
       key: addKey,
       closable: true
     });
@@ -258,15 +150,15 @@ export default function DisplayLayout() {
                 <TabPane
                   tab={
                     <span>
-                      {pane.icon}
+                      {Components[pane.icon]}
                       {pane.title}
-                      {pane.options}
+                      {Components[pane.options] || pane.options}
                     </span>
                   }
                   key={pane.key}
                   closable={pane.closable}
                 >
-                  {pane.content}
+                  {Components[pane.content]}
                 </TabPane>
               );
             })}
